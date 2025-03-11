@@ -1,12 +1,14 @@
 const gameIcon = document.querySelectorAll('.game-icon');
 const gameIcons = document.querySelector('.icons')
+const title = document.querySelector('.title');
 
-const cardCreator = (cardsArray) => {
+const cardCreator = (cardsName, cardsImg) => {
     let id = crypto.randomUUID();
-    const clicked = () => {return cardsArray.clicked = 'false'};
-    const name = () => {return cardsArray.name};
-    const img = () => {return cardsArray.img};
-    return { id, clicked, name, img };
+    let clicked = 'false';
+    let name = cardsName; 
+    let img = cardsImg;
+
+    return { id, clicked, name, img }
 }
 
 const cardsArray = [
@@ -23,19 +25,12 @@ const cardsArray = [
     {id: '', name: 'Abrodolph Lincoler', img: 'images/abraham.5bab582d158024aecc0a.png', clicked: ''},
     {id: '', name: 'Rick Sanchez', img: 'images/rickkk.c06ec7790deb77a3746b.png', clicked: ''}
 ];
-cardCreator(cardsArray)
-//Napravi funkciju card creator 
-//Ta funkcija neka ima let id to ce bit random Id i neka ima is clicked false
-//Name i img ce da primi ka argument 
-//Onda cu da imam varijablu let name i let img koje ce da budu inicirane tim argumentima
-//Za svaki od objekata u arrayu cardsArray napravi novi objekat uz pomoc card kreator
-//Sad taj novonastali objekat gurnem u array unutar managerCreator
 
 function managerCreator(){
     let cards = [];
   
-    const pushCardsArrayToCards = () =>{
-        cards.push(cardsArray);
+    const pushCardsArrayToCards = (card) =>{
+        cards.push(card);
     } 
    /*  const cardCreator = () => {
        for(let i = 0; i < iconsArray.length; i++){
@@ -49,7 +44,7 @@ function managerCreator(){
         return findIcon;
     }
     
-    const returnArray = () => { console.log(iconsArray) }
+    const returnArray = () => { return cards }
 
     const giveIconRandomPositionInArray = () => {
         iconsArray.sort(() => Math.random() - 0.5);
@@ -59,6 +54,11 @@ function managerCreator(){
 }
 const manager = managerCreator();
 
+for(let i = 0; i < cardsArray.length; i++){
+    const creator = cardCreator(cardsArray[i].name, cardsArray[i].img);
+    manager.pushCardsArrayToCards(creator);
+}
+console.log(manager.returnArray())
 
 const pushGameIconOnScreen = (icon) =>{
     let html = 
@@ -75,10 +75,5 @@ gameIcons.addEventListener('click', (e) => {
     let tragetIconId = e.target.closest('div').id;
 
     manager.markClickedIcon(tragetIconId);
-    manager.returnArray()
+    
 })
-//Napravi array objekata svaki objekat neka ima sljedeca polja id, name, img razmisli treba li jos nesto (treba mi njezino stanje da znam je li bila kliknuta ili nije)
-//Napravi kreatorske funkcije koje ti trebaju
-//Treba ce mi cardCreator i managerCreator
-//Za svaki objekat u arrayu pozovi cardCreator i novonastali objekat gurni u nastali managerArray
-//Od toga trenutka za sve koristis te nove pojacane objekte (manager.getCard(), card.getImg())
