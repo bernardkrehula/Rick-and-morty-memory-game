@@ -34,7 +34,7 @@ html {
     grid-template-columns: 150px 150px 150px 150px;
     gap: 30px;
 }
-.game-icon {
+.game-card {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -47,13 +47,41 @@ html {
     border-radius: 15px;
     box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.445);
 }
-.game-icon h1 {
+.game-card h1 {
     margin: 0 auto;
     font-size: 1.6rem;
     margin-top: 20px;
     width: 140px;
     word-wrap: break-word;
 }
-.game-icon img{
+.game-card img{
     height: 130px;
+}
+.game-over {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    text-align: center;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 35px 60px;
+    border-radius: 20px;
+}
+.game-over h1 {
+    margin-bottom: 10px;
+}
+.game-over h2 {
+    margin-bottom: 15px;
+}
+.game-over button {
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    background-color: rgb(35, 35, 35);
+    border-radius: 20px;
+    margin-bottom: -20px;
 }

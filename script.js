@@ -1,6 +1,6 @@
 const gameIcon = document.querySelectorAll('.game-icon');
 const gameIcons = document.querySelector('.icons')
-const title = document.querySelector('.title');
+const main = document.querySelector('.main');
 
 const cardCreator = (cardsName, cardsImg) => {
     let id = crypto.randomUUID();
@@ -43,10 +43,17 @@ function managerCreator(){
         cards.push(card);
     } 
 
-    const markClickedIcon = (clickedCardId) => {
+    const markClickedCard = (clickedCardId) => {
         let findCard = cards.find((card) => card.getId() == clickedCardId);
         findCard.getClicked = () => { return true };
         return  findCard.getClicked();
+    }
+
+    const checkIfClickedIsTrue = (clickedCardId) => {
+        let findCard = cards.find((card) => card.getId() == clickedCardId);
+        if(findCard.getClicked() == true){
+            console.log('istina')
+        }
     }
     
     const returnArray = () => { return cards }
@@ -55,14 +62,14 @@ function managerCreator(){
         iconsArray.sort(() => Math.random() - 0.5);
     }
    
-    return { cardCreator, markClickedIcon, returnArray, giveIconRandomPositionInArray, pushCardsArrayToCards }
+    return { cardCreator, markClickedCard, returnArray, giveIconRandomPositionInArray, pushCardsArrayToCards, checkIfClickedIsTrue }
 }
 const manager = managerCreator();
 
 const pushGameIconOnScreen = (card) =>{
     let html = 
     `
-    <div class="game-icon" id="${card.getId()}">
+    <div class="game-card" id="${card.getId()}">
         <img src="${card.getImg()}">
         <h1>${card.getName()}</h1>
     </div>
@@ -70,15 +77,27 @@ const pushGameIconOnScreen = (card) =>{
     gameIcons.insertAdjacentHTML('beforeend', html);
 }
 
+const showGameOver = () => {
+    let html = 
+    `
+    <div class="game-over">
+            <h1>Game over!</h1>
+            <h2>Your score: 1</h2>
+            <button>Play again?</button>
+    <div>
+    `
+    main.insertAdjacentHTML('beforeend', html);
+}
 for(let i = 0; i < cardsArray.length; i++){
     const creator = cardCreator(cardsArray[i].name, cardsArray[i].img);
     manager.pushCardsArrayToCards(creator);
     pushGameIconOnScreen(creator);
 }
-console.log(manager.returnArray())
 
 gameIcons.addEventListener('click', (e) => {
-    let tragetIconId = e.target.closest('div').id;
-    manager.markClickedIcon(tragetIconId);
-    
+    let tragetCardId = e.target.closest('div').id;
+
+    manager.checkIfClickedIsTrue(tragetCardId);
+    manager.markClickedCard(tragetCardId);
+    console.log(manager.returnArray())
 })
