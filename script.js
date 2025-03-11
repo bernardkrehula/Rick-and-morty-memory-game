@@ -59,11 +59,20 @@ function managerCreator(){
 }
 const manager = managerCreator();
 
-
+const pushGameIconOnScreen = (card) =>{
+    let html = 
+    `
+    <div class="game-icon" id="${card.getId()}">
+        <img src="${card.getImg()}">
+        <h1>${card.getName()}</h1>
+    </div>
+    `;
+    gameIcons.insertAdjacentHTML('beforeend', html);
+}
 for(let i = 0; i < cardsArray.length; i++){
     const creator = cardCreator(cardsArray[i].name, cardsArray[i].img);
     manager.pushCardsArrayToCards(creator);
-    
+    pushGameIconOnScreen(creator);
 }
 console.log(manager.returnArray())
 
