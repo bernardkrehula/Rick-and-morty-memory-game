@@ -43,10 +43,10 @@ function managerCreator(){
         cards.push(card);
     } 
 
-    const markClickedIcon = (clickedIconId) => {
-        let findIcon = cards.find((icon) => icon.getId() == clickedIconId);
-        findIcon.clicked = true;
-        return findIcon;
+    const markClickedIcon = (clickedCardId) => {
+        let findCard = cards.find((card) => card.getId() == clickedCardId);
+        findCard.getClicked = () => { return true };
+        return  findCard.getClicked();
     }
     
     const returnArray = () => { return cards }
@@ -69,6 +69,7 @@ const pushGameIconOnScreen = (card) =>{
     `;
     gameIcons.insertAdjacentHTML('beforeend', html);
 }
+
 for(let i = 0; i < cardsArray.length; i++){
     const creator = cardCreator(cardsArray[i].name, cardsArray[i].img);
     manager.pushCardsArrayToCards(creator);
@@ -76,12 +77,8 @@ for(let i = 0; i < cardsArray.length; i++){
 }
 console.log(manager.returnArray())
 
-
-
-
 gameIcons.addEventListener('click', (e) => {
     let tragetIconId = e.target.closest('div').id;
-    console.log(manager.markClickedIcon())
     manager.markClickedIcon(tragetIconId);
     
 })
