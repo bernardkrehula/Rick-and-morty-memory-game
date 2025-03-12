@@ -1,7 +1,6 @@
 const gameIcon = document.querySelectorAll('.game-icon');
 const gameCards = document.querySelector('.gameCards')
 const main = document.querySelector('.main');
-const playAgainBtn = document.querySelector('.game-over button');
 
 const cardCreator = (cardsName, cardsImg) => {
     let id = crypto.randomUUID();
@@ -53,7 +52,7 @@ function managerCreator(){
     const checkIfClickedIsTrue = (clickedCardId) => {
         let findCard = cards.find((card) => card.getId() == clickedCardId);
         if(findCard.getClicked() == true){
-            showGameOver()
+            showGameOver();
             gameCards.style.pointerEvents = 'none';
         }
     }
@@ -96,16 +95,24 @@ for(let i = 0; i < cardsArray.length; i++){
     pushGameIconOnScreen(creator);
 }
 
+
+main.addEventListener('click', (e) => {
+    const playAgainBtn = e.target.closest('button');
+    const gameOver = document.querySelector('.game-over'); 
+    if(playAgainBtn){
+        gameCards.style.pointerEvents = 'auto';
+        main.removeChild(gameOver);
+    }
+    console.log(playAgainBtn)
+})
+
 gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
 
     manager.checkIfClickedIsTrue(tragetCardId);
     manager.markClickedCard(tragetCardId);
+   
     console.log(manager.returnArray())
 })
-const playAgain = () => {
-    playAgainBtn.addEventListener('click', () => {
 
-    })
-}
 
