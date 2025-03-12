@@ -1,6 +1,8 @@
 const gameIcon = document.querySelectorAll('.game-icon');
-const gameCards = document.querySelector('.gameCards')
+const gameCards = document.querySelector('.gameCards');
 const main = document.querySelector('.main');
+const currentScore = document.querySelector('.currentScore h2');
+const highScore = document.querySelector('.highScore h2');
 
 const cardCreator = (cardsName, cardsImg) => {
     let id = crypto.randomUUID();
@@ -39,7 +41,7 @@ const cardsArray = [
 function managerCreator(){
     let cards = [];
     let currentScore = 0;
-    let highScore = 0;
+    let highScore;
 
     const pushCardsArrayToCards = (card) =>{
         cards.push(card);
@@ -54,14 +56,17 @@ function managerCreator(){
             findCard.getClicked = () => { return false };
         }
         else {
+            addScore()
+            highScore = currentScore;
+            updateCurrentAndHighScore(currentScore, highScore);
             findCard.getClicked = () => { return true };
         }
-        return findCard.getClicked(); 
     }
     const addScore = () => {
-
+        currentScore = currentScore + 1;
+        return currentScore;
     }
-
+    
     const returnArray = () => { return cards.forEach((card) => console.log(card.getClicked())) }
 
     const giveCardRandomPositionInArray = () => {
@@ -104,6 +109,10 @@ const handleGameOverScreenEvents = () => {
     gameCards.style.pointerEvents = 'auto';
     main.removeChild(gameOver);
 }
+const updateCurrentAndHighScore = (score, highestScore) => {
+    currentScore.innerHTML = `Current <br> score: ${score}`;
+    highScore.innerHTML = `High <br> score: ${highestScore}`
+}
 
 main.addEventListener('click', (e) => {
     const playAgainBtn = e.target.closest('button');
@@ -115,9 +124,10 @@ main.addEventListener('click', (e) => {
 
 gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
-
-    manager.returnCardClicked(tragetCardId);
-    console.log(manager.returnArray())
+    if(tragetCardId){
+        manager.returnCardClicked(tragetCardId);
+        console.log(manager.returnArray())
+    }
 })
 
 
