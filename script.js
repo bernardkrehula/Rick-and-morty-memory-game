@@ -38,36 +38,41 @@ const cardsArray = [
 
 function managerCreator(){
     let cards = [];
-  
+    let currentScore = 0;
+    let highScore = 0;
+
     const pushCardsArrayToCards = (card) =>{
         cards.push(card);
     } 
 
-    const markClickedCard = (clickedCardId) => {
+    const returnCardClicked = (clickedCardId) => {
         let findCard = cards.find((card) => card.getId() == clickedCardId);
-        findCard.getClicked = () => { return true };
-        return  findCard.getClicked();
-    }
 
-    const checkIfClickedIsTrue = (clickedCardId) => {
-        let findCard = cards.find((card) => card.getId() == clickedCardId);
         if(findCard.getClicked() == true){
             showGameOver();
             gameCards.style.pointerEvents = 'none';
+            findCard.getClicked = () => { return false };
         }
+        else {
+            findCard.getClicked = () => { return true };
+        }
+        return findCard.getClicked(); 
     }
-    
-    const returnArray = () => { return cards }
+    const addScore = () => {
 
-    const giveIconRandomPositionInArray = () => {
-        iconsArray.sort(() => Math.random() - 0.5);
+    }
+
+    const returnArray = () => { return cards.forEach((card) => console.log(card.getClicked())) }
+
+    const giveCardRandomPositionInArray = () => {
+        cards.sort(() => Math.random() - 0.5);
     }
    
-    return { cardCreator, markClickedCard, returnArray, giveIconRandomPositionInArray, pushCardsArrayToCards, checkIfClickedIsTrue }
+    return { cardCreator, addScore, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards }
 }
 const manager = managerCreator();
 
-const pushGameIconOnScreen = (card) =>{
+const pushGameCardOnScreen = (card) =>{
     let html = 
     `
     <div class="game-card" id="${card.getId()}">
@@ -92,26 +97,26 @@ const showGameOver = () => {
 for(let i = 0; i < cardsArray.length; i++){
     const creator = cardCreator(cardsArray[i].name, cardsArray[i].img);
     manager.pushCardsArrayToCards(creator);
-    pushGameIconOnScreen(creator);
+    pushGameCardOnScreen(creator);
 }
-
+const handleGameOverScreenEvents = () => {
+    const gameOver = document.querySelector('.game-over');
+    gameCards.style.pointerEvents = 'auto';
+    main.removeChild(gameOver);
+}
 
 main.addEventListener('click', (e) => {
     const playAgainBtn = e.target.closest('button');
-    const gameOver = document.querySelector('.game-over'); 
+
     if(playAgainBtn){
-        gameCards.style.pointerEvents = 'auto';
-        main.removeChild(gameOver);
+        handleGameOverScreenEvents();
     }
-    console.log(playAgainBtn)
 })
 
 gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
 
-    manager.checkIfClickedIsTrue(tragetCardId);
-    manager.markClickedCard(tragetCardId);
-   
+    manager.returnCardClicked(tragetCardId);
     console.log(manager.returnArray())
 })
 
