@@ -1,6 +1,7 @@
 const gameIcon = document.querySelectorAll('.game-icon');
-const gameIcons = document.querySelector('.icons')
+const gameCards = document.querySelector('.gameCards')
 const main = document.querySelector('.main');
+const playAgainBtn = document.querySelector('.game-over button');
 
 const cardCreator = (cardsName, cardsImg) => {
     let id = crypto.randomUUID();
@@ -52,7 +53,8 @@ function managerCreator(){
     const checkIfClickedIsTrue = (clickedCardId) => {
         let findCard = cards.find((card) => card.getId() == clickedCardId);
         if(findCard.getClicked() == true){
-            console.log('istina')
+            showGameOver()
+            gameCards.style.pointerEvents = 'none';
         }
     }
     
@@ -74,7 +76,7 @@ const pushGameIconOnScreen = (card) =>{
         <h1>${card.getName()}</h1>
     </div>
     `;
-    gameIcons.insertAdjacentHTML('beforeend', html);
+    gameCards.insertAdjacentHTML('beforeend', html);
 }
 
 const showGameOver = () => {
@@ -94,10 +96,16 @@ for(let i = 0; i < cardsArray.length; i++){
     pushGameIconOnScreen(creator);
 }
 
-gameIcons.addEventListener('click', (e) => {
+gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
 
     manager.checkIfClickedIsTrue(tragetCardId);
     manager.markClickedCard(tragetCardId);
     console.log(manager.returnArray())
 })
+const playAgain = () => {
+    playAgainBtn.addEventListener('click', () => {
+
+    })
+}
+

@@ -27,7 +27,7 @@ html {
     border-radius: 15px;
     box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.445);;
 }
-.icons {
+.gameCards {
     display: grid;
     justify-content: center;
     grid-template-rows: auto;
