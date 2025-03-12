@@ -49,19 +49,27 @@ function managerCreator(){
 
     const returnCardClicked = (clickedCardId) => {
         let findCard = cards.find((card) => card.getId() == clickedCardId);
+        return findCard;
+    }
 
-        if(findCard.getClicked() == true){
+    const gameOverRules = (clickedCardId) => {
+        const cardClicked = returnCardClicked(clickedCardId);
+        
+        if(cardClicked.getClicked() == true){
             showGameOver();
-            gameCards.style.pointerEvents = 'none';
-            findCard.getClicked = () => { return false };
+            handleGameOverClickEvents();
+            currentScore = 0;
+            updateCurrentAndHighScore(currentScore, highScore);
+            cardClicked.getClicked = () => { return false };
         }
         else {
             addScore()
             highScore = currentScore;
             updateCurrentAndHighScore(currentScore, highScore);
-            findCard.getClicked = () => { return true };
+            cardClicked.getClicked = () => { return true };
         }
     }
+
     const addScore = () => {
         currentScore = currentScore + 1;
         return currentScore;
@@ -73,7 +81,7 @@ function managerCreator(){
         cards.sort(() => Math.random() - 0.5);
     }
    
-    return { cardCreator, addScore, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards }
+    return { cardCreator, addScore, gameOverRules, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards }
 }
 const manager = managerCreator();
 
@@ -104,10 +112,14 @@ for(let i = 0; i < cardsArray.length; i++){
     manager.pushCardsArrayToCards(creator);
     pushGameCardOnScreen(creator);
 }
-const handleGameOverScreenEvents = () => {
-    const gameOver = document.querySelector('.game-over');
-    gameCards.style.pointerEvents = 'auto';
-    main.removeChild(gameOver);
+const handleGameOverClickEvents = () => {
+    
+    if(gameCards.style.pointerEvents == 'none'){
+        gameCards.style.pointerEvents = 'auto';
+    }
+    else {
+        gameCards.style.pointerEvents = 'none';
+    } 
 }
 const updateCurrentAndHighScore = (score, highestScore) => {
     currentScore.innerHTML = `Current <br> score: ${score}`;
@@ -116,9 +128,11 @@ const updateCurrentAndHighScore = (score, highestScore) => {
 
 main.addEventListener('click', (e) => {
     const playAgainBtn = e.target.closest('button');
+    const gameOver = document.querySelector('.game-over');
 
     if(playAgainBtn){
-        handleGameOverScreenEvents();
+        handleGameOverClickEvents();
+        main.removeChild(gameOver);
     }
 })
 
@@ -126,6 +140,7 @@ gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
     if(tragetCardId){
         manager.returnCardClicked(tragetCardId);
+        manager.gameOverRules(tragetCardId);
         console.log(manager.returnArray())
     }
 })
