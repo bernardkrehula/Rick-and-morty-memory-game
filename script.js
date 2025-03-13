@@ -46,7 +46,7 @@ function managerCreator(){
     const pushCardsArrayToCards = (card) =>{
         cards.push(card);
     } 
-
+    
     const returnCardClicked = (clickedCardId) => {
         let findCard = cards.find((card) => card.getId() == clickedCardId);
         return findCard;
@@ -138,8 +138,9 @@ main.addEventListener('click', (e) => {
 
 gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
-    if(tragetCardId){
-        manager.returnCardClicked(tragetCardId);
+    const currentCard = manager.returnCardClicked(tragetCardId);
+    
+    if(currentCard){
         manager.gameOverRules(tragetCardId);
         console.log(manager.returnArray())
     }
