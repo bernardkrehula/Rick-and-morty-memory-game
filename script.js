@@ -55,7 +55,7 @@ function managerCreator(){
     const gameOverRules = (clickedCardId) => {
         const cardClicked = returnCardClicked(clickedCardId);
         
-            showGameOver();
+            showGameOver(currentScore);
             handleGameOverClickEvents();
             currentScore = 0;
             updateCurrentAndHighScore(currentScore, highScore);
@@ -99,12 +99,12 @@ const pushGameCardOnScreen = (card) =>{
     gameCards.insertAdjacentHTML('beforeend', html);
 }
 
-const showGameOver = () => {
+const showGameOver = (currentScore) => {
     let html = 
     `
     <div class="game-over">
             <h1>Game over!</h1>
-            <h2>Your score: 1</h2>
+            <h2>Your score: ${currentScore}</h2>
             <button>Play again?</button>
     <div>
     `
@@ -142,7 +142,7 @@ main.addEventListener('click', (e) => {
 gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
     const currentCard = manager.returnCardClicked(tragetCardId);
-    
+
     if(tragetCardId){
         if(currentCard.getClicked() == true){
             manager.gameOverRules(tragetCardId);
