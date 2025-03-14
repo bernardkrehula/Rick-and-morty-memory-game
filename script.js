@@ -51,28 +51,31 @@ function managerCreator(){
         let findCard = cards.find((card) => card.getId() == clickedCardId);
         return findCard;
     }
-
+   
     const gameOverRules = (clickedCardId) => {
         const cardClicked = returnCardClicked(clickedCardId);
         
-        if(cardClicked.getClicked() == true){
             showGameOver();
             handleGameOverClickEvents();
             currentScore = 0;
             updateCurrentAndHighScore(currentScore, highScore);
             cardClicked.getClicked = () => { return false };
-        }
-        else {
-            addScore()
+    }
+
+    const changeIsClicked = (clickedCardId) => {
+        const cardClicked = returnCardClicked(clickedCardId);
+
             highScore = currentScore;
             updateCurrentAndHighScore(currentScore, highScore);
             cardClicked.getClicked = () => { return true };
-        }
     }
 
     const addScore = () => {
         currentScore = currentScore + 1;
         return currentScore;
+    }
+    const returnHighScore = () => {
+        return highScore = currentScore;
     }
     
     const returnArray = () => { return cards.forEach((card) => console.log(card.getClicked())) }
@@ -81,7 +84,7 @@ function managerCreator(){
         cards.sort(() => Math.random() - 0.5);
     }
    
-    return { cardCreator, addScore, gameOverRules, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards }
+    return { cardCreator, returnHighScore, addScore, gameOverRules, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards, changeIsClicked }
 }
 const manager = managerCreator();
 
@@ -140,9 +143,17 @@ gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
     const currentCard = manager.returnCardClicked(tragetCardId);
     
-    if(currentCard){
-        manager.gameOverRules(tragetCardId);
-        console.log(manager.returnArray())
+    if(tragetCardId){
+        if(currentCard.getClicked() == true){
+            manager.gameOverRules(tragetCardId);
+        }
+    
+        else {
+            manager.addScore();
+            manager.returnHighScore();
+            manager.changeIsClicked(tragetCardId);
+        }
+        
     }
 })
 
