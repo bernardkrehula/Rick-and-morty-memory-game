@@ -22,10 +22,15 @@ html {
 }
 .scores div {
     text-align: center;
-    background-color: aqua;
     padding: 10px 20px;
     border-radius: 15px;
-    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.445);;
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.445);
+}
+.currentScore {
+    background-color: rgb(255, 182, 253);
+}
+.highScore {
+    background-color: rgb(132, 255, 132);
 }
 .gameCards {
     display: grid;
@@ -39,7 +44,7 @@ html {
     cursor: pointer;
     flex-direction: column;
     text-align: center;
-    background-color: rgb(153, 153, 153);
+    background-color: rgb(239, 239, 239);
     padding-top: 10px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -71,6 +76,7 @@ html {
     background-color: white;
     padding: 35px 60px;
     border-radius: 20px;
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.445);
 }
 .game-over h1 {
     margin-bottom: 10px;

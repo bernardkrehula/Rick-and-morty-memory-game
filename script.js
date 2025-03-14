@@ -128,7 +128,6 @@ for(let i = 0; i < cardsArray.length; i++){
 const gameCardsOnScreen = () => {
     gameCards.innerHTML = '';
 }
-
 const handleGameOverClickEvents = () => {
     
     if(gameCards.style.pointerEvents == 'none'){
