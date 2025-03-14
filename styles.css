@@ -36,6 +36,7 @@ html {
 }
 .game-card {
     display: flex;
+    cursor: pointer;
     flex-direction: column;
     text-align: center;
     background-color: rgb(153, 153, 153);
@@ -78,6 +79,7 @@ html {
     margin-bottom: 15px;
 }
 .game-over button {
+    cursor: pointer;
     border: none;
     padding: 10px 15px;
     color: white;

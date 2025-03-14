@@ -1,4 +1,4 @@
-const gameIcon = document.querySelectorAll('.game-icon');
+const gameOverTitle = document.querySelector('.game-over h1');
 const gameCards = document.querySelector('.gameCards');
 const main = document.querySelector('.main');
 const currentScore = document.querySelector('.currentScore h2');
@@ -52,14 +52,11 @@ function managerCreator(){
         return findCard;
     }
    
-    const gameOverRules = (clickedCardId) => {
-        const cardClicked = returnCardClicked(clickedCardId);
-        
-            showGameOver(currentScore);
-            handleGameOverClickEvents();
-            currentScore = 0;
-            updateCurrentAndHighScore(currentScore, highScore);
-            cardClicked.getClicked = () => { return false };
+    const gameOverRules = () => {
+       
+        showGameOver(currentScore);
+        handleGameOverClickEvents();
+        cards.forEach((card) => card.getClicked = () => { return false} );
     }
 
     const changeIsClicked = (clickedCardId) => {
@@ -69,7 +66,7 @@ function managerCreator(){
             updateCurrentAndHighScore(currentScore, highScore);
             cardClicked.getClicked = () => { return true };
     }
-
+   
     const addScore = () => {
         currentScore = currentScore + 1;
         return currentScore;
@@ -77,14 +74,25 @@ function managerCreator(){
     const returnHighScore = () => {
         return highScore = currentScore;
     }
-    
+    const resetCurrentScore = () => {
+        return currentScore = 0;
+    }
+    const returnCurrentHighScore = () => {
+        return highScore;
+    }
+
     const returnArray = () => { return cards.forEach((card) => console.log(card.getClicked())) }
 
     const giveCardRandomPositionInArray = () => {
         cards.sort(() => Math.random() - 0.5);
     }
+    const showCardsOnScreen = () => {
+        cards.forEach((card) => {
+            pushGameCardOnScreen(card);
+        })
+    }
    
-    return { cardCreator, returnHighScore, addScore, gameOverRules, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards, changeIsClicked }
+    return { cardCreator, returnHighScore, showCardsOnScreen, resetCurrentScore, returnCurrentHighScore, addScore, gameOverRules, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards, changeIsClicked }
 }
 const manager = managerCreator();
 
@@ -110,11 +118,17 @@ const showGameOver = (currentScore) => {
     `
     main.insertAdjacentHTML('beforeend', html);
 }
+
 for(let i = 0; i < cardsArray.length; i++){
     const creator = cardCreator(cardsArray[i].name, cardsArray[i].img);
     manager.pushCardsArrayToCards(creator);
     pushGameCardOnScreen(creator);
 }
+
+const gameCardsOnScreen = () => {
+    gameCards.innerHTML = '';
+}
+
 const handleGameOverClickEvents = () => {
     
     if(gameCards.style.pointerEvents == 'none'){
@@ -135,6 +149,7 @@ main.addEventListener('click', (e) => {
 
     if(playAgainBtn){
         handleGameOverClickEvents();
+        updateCurrentAndHighScore(manager.resetCurrentScore(), manager.returnCurrentHighScore());
         main.removeChild(gameOver);
     }
 })
@@ -145,13 +160,16 @@ gameCards.addEventListener('click', (e) => {
 
     if(tragetCardId){
         if(currentCard.getClicked() == true){
-            manager.gameOverRules(tragetCardId);
+            manager.gameOverRules();
         }
     
         else {
+            gameCardsOnScreen();
+            manager.showCardsOnScreen();
             manager.addScore();
             manager.returnHighScore();
             manager.changeIsClicked(tragetCardId);
+            manager.giveCardRandomPositionInArray();
         }
         
     }
