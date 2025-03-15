@@ -12,10 +12,11 @@ const cardCreator = (cardsName, cardsImg) => {
 
     const getId = () => { return id };
     const getClicked = () => { return clicked };
+    const isClicked = (value) => { clicked = value };
     const getName = () => { return name };
     const getImg = () => { return img };
 
-    return { getId, getClicked, getName, getImg }
+    return { getId, getClicked, isClicked, getName, getImg }
 }
 //Glavna logika: 
 //Provjeri jesu li sve kartice clicked true? ako jesu pobjednik si
@@ -41,39 +42,35 @@ const cardsArray = [
 function managerCreator(){
     let cards = [];
     let currentScore = 0;
-    let highScore;
+    let highScore = 0;
 
     const pushCardsArrayToCards = (card) =>{
         cards.push(card);
     } 
-    
+
     const returnCardClicked = (clickedCardId) => {
-        let findCard = cards.find((card) => card.getId() == clickedCardId);
-        return findCard;
+        /* let findCard = cards.find((card) => card.getId() == clickedCardId);
+        return findCard; */
     }
    
     const gameOverRules = () => {
-       
+        
         showGameOver(currentScore);
         handleGameOverClickEvents();
-        cards.forEach((card) => card.getClicked = () => { return false} );
+        cards.forEach((card) => card.getClicked = () => { return false } );
     }
 
-    const changeIsClicked = (clickedCardId) => {
-        const cardClicked = returnCardClicked(clickedCardId);
-
-            highScore = currentScore;
-            updateCurrentAndHighScore(currentScore, highScore);
-            cardClicked.getClicked = () => { return true };
-    }
-   
     const addScore = () => {
         currentScore = currentScore + 1;
         return currentScore;
     }
-    const returnHighScore = () => {
-        return highScore = currentScore;
+    const checkForHighestScore = () => {
+        if(highScore == currentScore){
+            
+            return highScore;
+        }
     }
+
     const resetCurrentScore = () => {
         return currentScore = 0;
     }
@@ -81,7 +78,7 @@ function managerCreator(){
         return highScore;
     }
 
-    const returnArray = () => { return cards.forEach((card) => console.log(card.getClicked())) }
+    const returnArray = () => { return cards}
 
     const giveCardRandomPositionInArray = () => {
         cards.sort(() => Math.random() - 0.5);
@@ -92,7 +89,7 @@ function managerCreator(){
         })
     }
    
-    return { cardCreator, returnHighScore, showCardsOnScreen, resetCurrentScore, returnCurrentHighScore, addScore, gameOverRules, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards, changeIsClicked }
+    return { cardCreator, checkForHighestScore, showCardsOnScreen, resetCurrentScore, returnCurrentHighScore, addScore, gameOverRules, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards }
 }
 const manager = managerCreator();
 
@@ -128,6 +125,7 @@ for(let i = 0; i < cardsArray.length; i++){
 const gameCardsOnScreen = () => {
     gameCards.innerHTML = '';
 }
+
 const handleGameOverClickEvents = () => {
     
     if(gameCards.style.pointerEvents == 'none'){
@@ -155,22 +153,23 @@ main.addEventListener('click', (e) => {
 
 gameCards.addEventListener('click', (e) => {
     let tragetCardId = e.target.closest('div').id;
-    const currentCard = manager.returnCardClicked(tragetCardId);
 
+    const cardsArray = manager.returnArray();
+
+    
     if(tragetCardId){
-        if(currentCard.getClicked() == true){
+        let findCard = cardsArray.find((card) => card.getId() == tragetCardId);
+
+        if(findCard.getClicked() == true){
             manager.gameOverRules();
         }
-    
+        //Odmah ju pozivam u else provjeravam koja je kartica i ako je kliknuta dobiva true
         else {
+            manager.giveCardRandomPositionInArray();
             gameCardsOnScreen();
             manager.showCardsOnScreen();
-            manager.addScore();
-            manager.returnHighScore();
-            manager.changeIsClicked(tragetCardId);
-            manager.giveCardRandomPositionInArray();
         }
-        
+        findCard.isClicked(true);
     }
 })
 
