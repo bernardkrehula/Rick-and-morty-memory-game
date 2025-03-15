@@ -48,37 +48,44 @@ function managerCreator(){
         cards.push(card);
     } 
 
-    const returnCardClicked = (clickedCardId) => {
-        /* let findCard = cards.find((card) => card.getId() == clickedCardId);
-        return findCard; */
+    const setCardsClickedToFalse = () => {
+        cards.forEach((card) => card.isClicked(false));
     }
    
-    const gameOverRules = () => {
-        
-        showGameOver(currentScore);
-        handleGameOverClickEvents();
-        cards.forEach((card) => card.getClicked = () => { return false } );
-    }
-
-    const addScore = () => {
+    const addOneToCurrentScore = () => {
         currentScore = currentScore + 1;
         return currentScore;
     }
+    const addOneToHighScore = () => {
+        highScore = highScore + 1;
+        return highScore;
+    }
     const checkForHighestScore = () => {
-        if(highScore == currentScore){
-            
-            return highScore;
+        const arrayLength = cards.length;
+
+        if(currentScore < arrayLength){
+            addOneToCurrentScore();
+            if(currentScore > highScore){
+                highScore = currentScore;
+            }
+            updateCurrentAndHighScore(returnCurrentScore(), returnCurrentHighScore())
+
         }
     }
 
-    const resetCurrentScore = () => {
-        return currentScore = 0;
+    const returnCurrentScore = () => {
+        return currentScore;
     }
     const returnCurrentHighScore = () => {
         return highScore;
     }
 
-    const returnArray = () => { return cards}
+    const resetCurrentScore = () => {
+        return currentScore = 0;
+    }
+    
+
+    const returnArray = () => { return cards }
 
     const giveCardRandomPositionInArray = () => {
         cards.sort(() => Math.random() - 0.5);
@@ -89,7 +96,7 @@ function managerCreator(){
         })
     }
    
-    return { cardCreator, checkForHighestScore, showCardsOnScreen, resetCurrentScore, returnCurrentHighScore, addScore, gameOverRules, returnCardClicked, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards }
+    return { cardCreator, returnCurrentScore, checkForHighestScore, addOneToHighScore, showCardsOnScreen, resetCurrentScore, returnCurrentHighScore, addOneToCurrentScore, setCardsClickedToFalse, returnArray, giveCardRandomPositionInArray, pushCardsArrayToCards }
 }
 const manager = managerCreator();
 
@@ -104,12 +111,12 @@ const pushGameCardOnScreen = (card) =>{
     gameCards.insertAdjacentHTML('beforeend', html);
 }
 
-const showGameOver = (currentScore) => {
+const showGameOver = (highScore) => {
     let html = 
     `
     <div class="game-over">
             <h1>Game over!</h1>
-            <h2>Your score: ${currentScore}</h2>
+            <h2>Your score: ${highScore}</h2>
             <button>Play again?</button>
     <div>
     `
@@ -146,25 +153,29 @@ main.addEventListener('click', (e) => {
 
     if(playAgainBtn){
         handleGameOverClickEvents();
-        updateCurrentAndHighScore(manager.resetCurrentScore(), manager.returnCurrentHighScore());
+        manager.setCardsClickedToFalse();
+        manager.resetCurrentScore();
+        updateCurrentAndHighScore(manager.returnCurrentScore(), manager.returnCurrentHighScore());
         main.removeChild(gameOver);
     }
 })
 
 gameCards.addEventListener('click', (e) => {
-    let tragetCardId = e.target.closest('div').id;
+    const tragetCardId = e.target.closest('div').id;
 
     const cardsArray = manager.returnArray();
 
     
     if(tragetCardId){
-        let findCard = cardsArray.find((card) => card.getId() == tragetCardId);
+        const findCard = cardsArray.find((card) => card.getId() == tragetCardId);
 
         if(findCard.getClicked() == true){
-            manager.gameOverRules();
+            showGameOver(manager.returnCurrentScore());
+            handleGameOverClickEvents();
         }
-        //Odmah ju pozivam u else provjeravam koja je kartica i ako je kliknuta dobiva true
+
         else {
+            manager.checkForHighestScore();
             manager.giveCardRandomPositionInArray();
             gameCardsOnScreen();
             manager.showCardsOnScreen();
